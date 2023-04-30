@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  go:
+    build: .
+    ports: 
+      - "3000:3000"
+    volumes:
+      - type: bind
+        source: .
+        target: /src/app
+    tty: true
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    container_name: mysql-go
+    environment:
+      MYSQL_DATABASE: 'db'   
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'      
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database:/root
+volumes:
+  mysql-data:
+

@@ -20,10 +20,10 @@ func NewSqlHandler() database.ISqlHandler {
 
 	// DB接続情報
 	config := mysql.Config{
-		DBName:    "db",
+		DBName:    "moneyFlow",
 		User:      "root",
 		Passwd:    "root",
-		Addr:      "localhost:3306",
+		Addr:      "db",
 		Net:       "tcp",
 		ParseTime: true,
 		Collation: "utf8mb4_unicode_ci",

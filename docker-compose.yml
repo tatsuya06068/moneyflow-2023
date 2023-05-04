@@ -1,12 +1,12 @@
 version: '3.8'
 services:
-  go:
+  api:
     build: .
     ports: 
       - "3000:3000"
     volumes:
       - type: bind
-        source: .
+        source: ./api
         target: /src/app
     tty: true
     depends_on:
@@ -24,6 +24,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./database:/root
+      - ./database:/database
 volumes:
   mysql-data:
 

@@ -25,6 +25,7 @@ services:
       - mysql-data:/var/lib/mysql
       - ./database:/root
       - ./database:/database
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
 volumes:
   mysql-data:
 

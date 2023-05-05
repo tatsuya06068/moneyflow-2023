@@ -2,23 +2,28 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/tatsuya06068/moneyflow-2023/driver"
 )
 
 func main() {
+
+	mux := http.NewServeMux()
 
 	handler2 := func(w http.ResponseWriter, _ *http.Request) {
 		io.WriteString(w, "Hello-2\n")
 	}
 
 	// パスとハンドラー関数を結びつける
-	http.HandleFunc("/foo/", h)
-	http.HandleFunc("/bar/", handler2)
-	http.HandleFunc("/data/", GetData)
+	mux.HandleFunc("/foo/", h)
+	mux.HandleFunc("/signup/", handler2)
+	mux.HandleFunc("/data/", GetData)
 
 	// サーバを起動
 	log.Fatal(http.ListenAndServe(":3000", nil))
@@ -39,6 +44,20 @@ type Json struct {
 }
 
 func GetData(w http.ResponseWriter, _ *http.Request) {
+
+	// JWTに付与する構造体
+	claims := jwt.MapClaims{
+		"user_id": "user_id1234",
+		"exp":     time.Now().Add(time.Hour * 24).Unix(), // 24時間が有効期限
+	}
+
+	// ヘッダーとペイロード生成
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// トークンに署名を付与
+	accessToken, _ := token.SignedString([]byte("ACCESS_SECRET_KEY"))
+	fmt.Println("accessToken:", accessToken)
+
 	dbDriver := driver.NewSqlHandler()
 
 	row, err := dbDriver.Query("select m_bop_category_id, bop_name from m_bop_categories")
@@ -61,5 +80,4 @@ func GetData(w http.ResponseWriter, _ *http.Request) {
 	res, _ := json.Marshal(j)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
-
 }

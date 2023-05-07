@@ -3,7 +3,6 @@ package database
 import (
 	"crypto/sha256"
 	"fmt"
-	"log"
 
 	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
 	"github.com/tatsuya06068/moneyflow-2023/internal/domain/repository"
@@ -30,8 +29,6 @@ func (a AuthDB) InsertAuth(param entity.SignupRequest) (int64, error) {
 		userName:     param.UserName,
 		hashPassword: fmt.Sprintf("%x", sha256.Sum256([]byte(param.Password))),
 	}
-
-	log.Printf("%+v", insertAuth)
 
 	result, err := a.SqlHandler.Execute("INSERT INTO t_users(user_name, password) VALUES(?,?)", insertAuth.userName, insertAuth.hashPassword)
 

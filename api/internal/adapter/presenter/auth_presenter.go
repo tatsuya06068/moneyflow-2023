@@ -8,3 +8,11 @@ type AuthPresenter struct {
 func NewAuthPresenter() port.IAuthOutputPort {
 	return nil
 }
+
+func (ap AuthPresenter) Render(bool) {
+
+}
+
+func (ap AuthPresenter) RenderError(error) {
+
+}

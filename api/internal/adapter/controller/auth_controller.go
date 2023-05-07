@@ -25,8 +25,8 @@ func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	param := entity.SignupRequest{
-		UserName: r.FormValue("name"),
-		Password: r.FormValue("password"),
+		UserName: r.PostFormValue("name"),
+		Password: r.PostFormValue("password"),
 	}
 
 	repository := ac.RepoFactory(ac.SqlHandler)

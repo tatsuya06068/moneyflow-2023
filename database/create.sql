@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS m_bop_categories(
 CREATE TABLE IF NOT EXISTS t_users(
     user_id int  UNSIGNED AUTO_INCREMENT,
     user_name varchar(255) NOT NULL,
-    email  varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
     PRIMARY KEY (user_id)
 );

@@ -1,11 +1,11 @@
-package driver
+package dbDriver
 
 import (
 	"database/sql"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/tatsuya06068/moneyflow-2023/adapter/database"
+	"github.com/tatsuya06068/moneyflow-2023/internal/adapter/database"
 )
 
 type SqlHandler struct {

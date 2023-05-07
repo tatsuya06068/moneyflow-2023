@@ -1,8 +1,6 @@
 package presenter
 
-import (
-	"github.com/tatsuya06068/moneyflow-2023/usecase/port"
-)
+import "github.com/tatsuya06068/moneyflow-2023/internal/usecase/port"
 
 type AuthPresenter struct {
 }

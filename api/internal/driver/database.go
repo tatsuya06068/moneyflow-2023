@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/tatsuya06068/moneyflow-2023/internal/adapter/database"
+	database "github.com/tatsuya06068/moneyflow-2023/internal/adapter/gateway"
 )
 
 type SqlHandler struct {

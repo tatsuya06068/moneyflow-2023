@@ -2,23 +2,22 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
-	"github.com/tatsuya06068/moneyflow-2023/internal/adapter/database"
+	database "github.com/tatsuya06068/moneyflow-2023/internal/adapter/gateway"
 	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/repository"
-	"github.com/tatsuya06068/moneyflow-2023/internal/usecase/port"
+	"github.com/tatsuya06068/moneyflow-2023/internal/usecase/interactor"
 )
 
 type AuthController struct {
-	// database
-	RepoFactory func(sqlhandler database.ISqlHandler) repository.IAuthRepository
+	interactor entity.IAuthInteractor
+}
 
-	// iteractor
-	InputFactory func(auth repository.IAuthRepository) port.IAuthInputport
-
-	// database.NewAuthDatabase
-	SqlHandler database.ISqlHandler
+func NewAuthController(sqlHandler database.ISqlHandler) *AuthController {
+	return &AuthController{
+		interactor: interactor.NewAuthInteractor(database.NewAuthDB(sqlHandler)),
+	}
 }
 
 func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
@@ -28,8 +27,20 @@ func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 		UserName: r.PostFormValue("name"),
 		Password: r.PostFormValue("password"),
 	}
+	// バリデーションチェック
+	if param.UserName == "" || param.Password == "" {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "未入力の項目があります。")
+	}
 
-	repository := ac.RepoFactory(ac.SqlHandler)
-	inputPort := ac.InputFactory(repository)
-	inputPort.Signup(ctx, param)
+	id, err := ac.interactor.Signup(ctx, param)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, id)
 }

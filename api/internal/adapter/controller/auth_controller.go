@@ -28,7 +28,7 @@ func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 		Password: r.PostFormValue("password"),
 	}
 	// バリデーションチェック
-	if param.UserName == "" || param.Password == "" {
+	if !validate(param.UserName, param.Password) {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, "未入力の項目があります。")
 	}
@@ -43,4 +43,48 @@ func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, id)
+}
+
+func (ac AuthController) Signin(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	fmt.Println(r.FormValue("name"))
+	param := entity.SigninRequest{
+		UserName: r.FormValue("name"),
+		Password: r.FormValue("password"),
+	}
+
+	// バリデーションチェック
+	if !validate(param.UserName, param.Password) {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, "未入力の項目があります。")
+		return
+	}
+
+	token, isUser, err := ac.interactor.Signin(ctx, param)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprint(w, err)
+		return
+	}
+
+	if !isUser {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, "false")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, token)
+}
+
+// / バリデーションチェック
+func validate(userName string, password string) bool {
+
+	if userName == "" || password == "" {
+		return false
+	}
+
+	return true
 }

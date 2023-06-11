@@ -1,7 +1,12 @@
 package repository
 
-import "github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
+import (
+	"context"
+
+	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
+)
 
 type IAuthRepository interface {
-	InsertAuth(param entity.SignupRequest) (int64, error)
+	InsertAuth(ctx context.Context, param entity.SignupRequest) (int64, error)
+	Select(ctx context.Context, param entity.SigninRequest) (entity.User, bool, error)
 }

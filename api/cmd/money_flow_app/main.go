@@ -14,6 +14,8 @@ func main() {
 
 	// signup
 	mux.HandleFunc("/auth/signup/", auth.Signup)
+	// signin
+	mux.HandleFunc("/auth/signin/", auth.Signin)
 
 	// サーバを起動
 	log.Fatal(http.ListenAndServe(":3000", mux))

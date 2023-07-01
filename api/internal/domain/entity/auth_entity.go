@@ -18,6 +18,6 @@ type User struct {
 }
 
 type IAuthInteractor interface {
-	Signup(ctx context.Context, param SignupRequest) (int64, error)
+	Signup(ctx context.Context, param SignupRequest) (string, error)
 	Signin(ctx context.Context, param SigninRequest) (string, bool, error)
 }

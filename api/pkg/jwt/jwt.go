@@ -9,6 +9,7 @@ import (
 
 var secretKey = []byte("pjases")
 
+// token作成
 func GenerateToken(userID int) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
@@ -24,6 +25,7 @@ func GenerateToken(userID int) (string, error) {
 	return signedToken, nil
 }
 
+// tokenデコード　
 func VerifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil

@@ -6,17 +6,10 @@ import (
 	"fmt"
 
 	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/repository"
 )
 
 type AuthDBGateway struct {
-	sqlHandler ISqlHandler
-}
-
-func NewAuthDB(sh ISqlHandler) repository.IAuthRepository {
-	return &AuthDBGateway{
-		sqlHandler: sh,
-	}
+	ISqlHandler
 }
 
 type auth struct {
@@ -31,7 +24,7 @@ func (ag AuthDBGateway) InsertAuth(ctx context.Context, param entity.SignupReque
 		hashPassword: fmt.Sprintf("%x", sha256.Sum256([]byte(param.Password))),
 	}
 
-	result, err := ag.sqlHandler.Execute("INSERT INTO t_users(user_name, password) VALUES(?,?)", insertAuth.userName, insertAuth.hashPassword)
+	result, err := ag.Execute("INSERT INTO t_users(user_name, password) VALUES(?,?)", insertAuth.userName, insertAuth.hashPassword)
 
 	if err != nil {
 		return 0, err
@@ -55,7 +48,7 @@ func (ag AuthDBGateway) Select(ctx context.Context, param entity.SigninRequest) 
 
 	user := entity.User{}
 
-	row, err := ag.sqlHandler.Query("SELECT user_id, user_name FROM t_users WHERE user_name = ? AND password = ?", targetUser.userName, targetUser.hashPassword)
+	row, err := ag.Query("SELECT user_id, user_name FROM t_users WHERE user_name = ? AND password = ?", targetUser.userName, targetUser.hashPassword)
 
 	if err != nil {
 		return user, false, err

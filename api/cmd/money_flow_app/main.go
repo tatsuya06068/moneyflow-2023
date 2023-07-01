@@ -10,12 +10,18 @@ import (
 
 func main() {
 	mux := http.NewServeMux()
-	auth := controller.NewAuthController(dbDriver.NewSqlHandler())
 
+	auth := controller.NewAuthController(dbDriver.NewSqlHandler())
 	// signup
 	mux.HandleFunc("/auth/signup/", auth.Signup)
 	// signin
 	mux.HandleFunc("/auth/signin/", auth.Signin)
+
+	// mobList
+	// mux.HandleFunc("/mob/list/", )
+	//taskDetail
+
+	//taskDelete
 
 	// サーバを起動
 	log.Fatal(http.ListenAndServe(":3000", mux))

@@ -16,7 +16,9 @@ type AuthController struct {
 
 func NewAuthController(sqlHandler database.ISqlHandler) *AuthController {
 	return &AuthController{
-		interactor: interactor.NewAuthInteractor(database.NewAuthDB(sqlHandler)),
+		interactor: interactor.AuthInteractor{
+			IAuthRepository: database.AuthDBGateway{ISqlHandler: sqlHandler},
+		},
 	}
 }
 
@@ -31,6 +33,7 @@ func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 	if !validate(param.UserName, param.Password) {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, "未入力の項目があります。")
+		return
 	}
 
 	id, err := ac.interactor.Signup(ctx, param)

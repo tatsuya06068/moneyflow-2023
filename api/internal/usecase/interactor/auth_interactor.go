@@ -9,21 +9,27 @@ import (
 )
 
 type AuthInteractor struct {
-	repository repository.IAuthRepository
+	repository.IAuthRepository
 }
 
-func NewAuthInteractor(authRepo repository.IAuthRepository) entity.IAuthInteractor {
-	return &AuthInteractor{
-		repository: authRepo,
+func (ai AuthInteractor) Signup(ctx context.Context, param entity.SignupRequest) (string, error) {
+	userID, err := ai.InsertAuth(ctx, param)
+
+	if err != nil {
+		return "", err
 	}
-}
 
-func (ai AuthInteractor) Signup(ctx context.Context, param entity.SignupRequest) (int64, error) {
-	return ai.repository.InsertAuth(ctx, param)
+	// JWTの生成
+	token, err := jwt.GenerateToken(int(userID))
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 func (ai AuthInteractor) Signin(ctx context.Context, param entity.SigninRequest) (string, bool, error) {
-	user, isUser, err := ai.repository.Select(ctx, param)
+	user, isUser, err := ai.Select(ctx, param)
 
 	if err != nil {
 		return "", false, err

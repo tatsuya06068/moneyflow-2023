@@ -17,9 +17,9 @@ func main() {
 	// signin
 	mux.HandleFunc("/auth/signin/", auth.Signin)
 
-	bop := controller.NewBoPController(dbDriver.NewSqlHandler())
-	// bopList
-	mux.HandleFunc("/bop/list/", bop.GetBoPList)
+	// bop := controller.NewBoPController(dbDriver.NewSqlHandler())
+	// // bopList
+	// mux.HandleFunc("/bop/list/", bop.GetBoPList)
 	//taskDetail
 
 	//taskDelete

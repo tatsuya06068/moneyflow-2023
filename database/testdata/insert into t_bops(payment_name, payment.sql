@@ -1,0 +1,2 @@
+INSERT INTO t_bops(payment_name, payment_date, total_amount, m_bop_category_id, user_id) VALUES('test1', '2023-06-06 12:00:00', 1000, 1, 19);
+INSERT INTO t_bops(payment_name, payment_date, total_amount, m_bop_category_id, user_id) VALUES('test2', '2023-06-06 12:00:00', 1000, 1, 19);

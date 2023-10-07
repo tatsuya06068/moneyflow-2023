@@ -6,13 +6,17 @@ import (
 )
 
 type BoPList struct {
-	bop_id       string
-	payment_name string
-	payment_date time.Time
-	total_amount int
-	category_id  int
+	BoPID       string
+	PaymentName string
+	PaymentDate time.Time
+	TotalAmount int
+	CategoryId  int
+}
+
+type Token struct {
+	UserId string
 }
 
 type IBoPInteractor interface {
-	BoPList(ctx context.Context, jwt string)
+	BoPList(ctx context.Context, userId int) ([]BoPList, error)
 }

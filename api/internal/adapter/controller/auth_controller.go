@@ -51,7 +51,6 @@ func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 func (ac AuthController) Signin(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	fmt.Println(r.FormValue("name"))
 	param := entity.SigninRequest{
 		UserName: r.FormValue("name"),
 		Password: r.FormValue("password"),

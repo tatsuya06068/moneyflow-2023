@@ -7,13 +7,14 @@ import (
 	"github.com/go-sql-driver/mysql"
 	database "github.com/tatsuya06068/moneyflow-2023/internal/adapter/gateway"
 	"github.com/tatsuya06068/moneyflow-2023/internal/constants"
+	"github.com/tatsuya06068/moneyflow-2023/internal/entity"
 )
 
 type SqlHandler struct {
 	Conn *sql.DB
 }
 
-func NewSqlHandler() database.ISqlHandler {
+func NewSqlHandler(baseInfo entity.BaseDbInfo) database.ISqlHandler {
 	jst, err := time.LoadLocation(constants.LocationAisia)
 	if err != nil {
 		panic(err)
@@ -21,9 +22,9 @@ func NewSqlHandler() database.ISqlHandler {
 
 	// DB接続情報
 	config := mysql.Config{
-		DBName:    "moneyFlow",
-		User:      "root",
-		Passwd:    "root",
+		DBName:    baseInfo.HostName,
+		User:      baseInfo.User,
+		Passwd:    baseInfo.Password,
 		Addr:      "db",
 		Net:       "tcp",
 		ParseTime: true,

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
+	"github.com/tatsuya06068/moneyflow-2023/internal/entity"
 )
 
 type IAuthRepository interface {

@@ -3,24 +3,25 @@ package interactor
 import (
 	"context"
 
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/repository"
-	"github.com/tatsuya06068/moneyflow-2023/pkg/jwt"
+	"github.com/tatsuya06068/moneyflow-2023/internal/entity"
+	"github.com/tatsuya06068/moneyflow-2023/internal/usecase/jwt"
+	"github.com/tatsuya06068/moneyflow-2023/internal/usecase/repository"
 )
 
 type AuthInteractor struct {
 	repository.IAuthRepository
+	jwt.IAuthJwt
 }
 
-func (ai AuthInteractor) Signup(ctx context.Context, param entity.SignupRequest) (string, error) {
-	userID, err := ai.InsertAuth(ctx, param)
+func (ai *AuthInteractor) Signup(ctx context.Context, param entity.SignupRequest) (string, error) {
+	userID, err := ai.IAuthRepository.InsertAuth(ctx, param)
 
 	if err != nil {
 		return "", err
 	}
 
 	// JWTの生成
-	token, err := jwt.GenerateToken(int(userID))
+	token, err := ai.IAuthJwt.GenerateToken(int(userID))
 	if err != nil {
 		return "", err
 	}
@@ -28,8 +29,8 @@ func (ai AuthInteractor) Signup(ctx context.Context, param entity.SignupRequest)
 	return token, nil
 }
 
-func (ai AuthInteractor) Signin(ctx context.Context, param entity.SigninRequest) (string, bool, error) {
-	user, isUser, err := ai.Select(ctx, param)
+func (ai *AuthInteractor) Signin(ctx context.Context, param entity.SigninRequest) (string, bool, error) {
+	user, isUser, err := ai.IAuthRepository.Select(ctx, param)
 
 	if err != nil {
 		return "", false, err
@@ -40,7 +41,7 @@ func (ai AuthInteractor) Signin(ctx context.Context, param entity.SigninRequest)
 	}
 
 	// JWTの生成
-	token, err := jwt.GenerateToken(int(user.UserId))
+	token, err := ai.IAuthJwt.GenerateToken(int(user.UserId))
 	if err != nil {
 		return "", false, err
 	}

@@ -18,5 +18,5 @@ type Token struct {
 }
 
 type IBoPInteractor interface {
-	BoPList(ctx context.Context, userId int) ([]BoPList, error)
+	BoPList(ctx context.Context, token string) ([]BoPList, error)
 }

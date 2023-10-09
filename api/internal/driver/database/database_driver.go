@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	database "github.com/tatsuya06068/moneyflow-2023/internal/adapter/gateway"
+	"github.com/tatsuya06068/moneyflow-2023/internal/constants"
 )
 
 type SqlHandler struct {
@@ -13,7 +14,7 @@ type SqlHandler struct {
 }
 
 func NewSqlHandler() database.ISqlHandler {
-	jst, err := time.LoadLocation("Asia/Tokyo")
+	jst, err := time.LoadLocation(constants.LocationAisia)
 	if err != nil {
 		panic(err)
 	}

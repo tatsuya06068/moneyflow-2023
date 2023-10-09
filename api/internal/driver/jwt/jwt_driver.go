@@ -2,9 +2,12 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+
+	iJwt "github.com/tatsuya06068/moneyflow-2023/internal/adapter/jwt"
 )
 
 type JwtHandler struct {
@@ -18,12 +21,15 @@ func NewJwtHandler(secretKey string) *JwtHandler {
 }
 
 // token作成
-func (jh JwtHandler) GenerateToken(claimsMap jwt.MapClaims) (string, error) {
+func (jh *JwtHandler) GenerateToken(claimsMap jwt.MapClaims) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 
-	claims = claimsMap
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+
+	for k, v := range claimsMap {
+		claims[k] = v
+	}
 
 	// JWTの著名
 	signedToken, err := token.SignedString(jh.secretKey)
@@ -35,7 +41,7 @@ func (jh JwtHandler) GenerateToken(claimsMap jwt.MapClaims) (string, error) {
 }
 
 // tokenデコード
-func (jh JwtHandler) VerifyToken(tokenString string) (*ClimeDriver, error) {
+func (jh *JwtHandler) VerifyToken(tokenString string) (iJwt.IClimeDriver, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return jh.secretKey, nil
 	})
@@ -47,8 +53,9 @@ func (jh JwtHandler) VerifyToken(tokenString string) (*ClimeDriver, error) {
 	if !token.Valid {
 		return nil, errors.New("invalid token")
 	}
-
-	return &ClimeDriver{token: token}, nil
+	claim := new(ClimeDriver)
+	claim.token = token
+	return claim, nil
 }
 
 type ClimeDriver struct {
@@ -57,6 +64,7 @@ type ClimeDriver struct {
 
 // payload取り出し
 func (cd *ClimeDriver) GetPayload() (jwt.MapClaims, error) {
+	fmt.Printf("user_id: %#v\n", cd.token)
 	if claims, ok := cd.token.Claims.(jwt.MapClaims); ok && cd.token.Valid {
 		return claims, nil
 	}

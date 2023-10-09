@@ -6,7 +6,8 @@ import (
 	"net/http"
 
 	database "github.com/tatsuya06068/moneyflow-2023/internal/adapter/gateway"
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
+	"github.com/tatsuya06068/moneyflow-2023/internal/adapter/jwt"
+	"github.com/tatsuya06068/moneyflow-2023/internal/entity"
 	"github.com/tatsuya06068/moneyflow-2023/internal/usecase/interactor"
 )
 
@@ -14,15 +15,16 @@ type AuthController struct {
 	interactor entity.IAuthInteractor
 }
 
-func NewAuthController(sqlHandler database.ISqlHandler) *AuthController {
+func NewAuthController(sqlHandler database.ISqlHandler, jwtHandler jwt.IJwtHandler) *AuthController {
 	return &AuthController{
-		interactor: interactor.AuthInteractor{
+		interactor: &interactor.AuthInteractor{
 			IAuthRepository: database.AuthDBGateway{ISqlHandler: sqlHandler},
+			IAuthJwt:        &jwt.AuthJwt{IJwtHandler: jwtHandler},
 		},
 	}
 }
 
-func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
+func (ac *AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	param := entity.SignupRequest{
@@ -48,7 +50,7 @@ func (ac AuthController) Signup(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, id)
 }
 
-func (ac AuthController) Signin(w http.ResponseWriter, r *http.Request) {
+func (ac *AuthController) Signin(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	param := entity.SigninRequest{

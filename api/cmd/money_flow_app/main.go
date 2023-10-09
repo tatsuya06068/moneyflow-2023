@@ -14,17 +14,18 @@ import (
 func main() {
 	mux := http.NewServeMux()
 	// create database driver
-	auth := controller.NewAuthController(database.NewSqlHandler())
 
 	// create jwt driver
 	jwtDriver := jwt.NewJwtHandler(os.Getenv(constants.JwtSecretKey))
+
+	auth := controller.NewAuthController(database.NewSqlHandler(), jwtDriver)
 
 	// signup
 	mux.HandleFunc("/auth/signup/", auth.Signup)
 	// signin
 	mux.HandleFunc("/auth/signin/", auth.Signin)
 
-	bop := controller.NewBoPController(database.NewSqlHandler())
+	bop := controller.NewBoPController(database.NewSqlHandler(), jwtDriver)
 	// bopList
 	mux.HandleFunc("/bop/list/", bop.GetBoPList)
 	//taskDetail

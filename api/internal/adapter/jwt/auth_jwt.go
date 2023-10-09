@@ -12,8 +12,8 @@ type AuthJwt struct {
 }
 
 func (aj *AuthJwt) GenerateToken(userId int) (string, error) {
-	var claimsMap jwt.MapClaims
-	claimsMap["userId"] = userId
+	claimsMap := jwt.MapClaims{}
+	claimsMap["user_id"] = userId
 
 	token, err := aj.IJwtHandler.GenerateToken(claimsMap)
 

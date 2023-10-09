@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
+	"github.com/tatsuya06068/moneyflow-2023/internal/entity"
 )
 
 type BoPDBGateway struct {
@@ -12,7 +12,7 @@ type BoPDBGateway struct {
 
 func (bdg BoPDBGateway) GetBoPList(ctx context.Context, userId int) ([]entity.BoPList, error) {
 
-	row, err := bdg.Query("SELECT t_bop_id, payment_naem, payment_date, total_amount, m_bop_category_id WHERE user_id = ?", userId)
+	row, err := bdg.Query("SELECT t_bop_id, payment_name, payment_date, total_amount, m_bop_category_id FROM t_bops WHERE user_id = ?", userId)
 
 	if err != nil {
 		return nil, err

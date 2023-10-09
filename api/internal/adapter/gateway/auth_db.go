@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 
-	"github.com/tatsuya06068/moneyflow-2023/internal/domain/entity"
+	"github.com/tatsuya06068/moneyflow-2023/internal/entity"
 )
 
 type AuthDBGateway struct {
